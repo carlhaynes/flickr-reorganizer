@@ -10,4 +10,5 @@ return array(
     'from_directory' => '/path/to/files',
     'to_directory' => '/path/to/put/moved/files',
     'ignore_directories' => ['ignore_me'],
+    'copy_files' => true, // if false, files are moved, not copied
 );
