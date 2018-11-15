@@ -1,6 +1,8 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea
 *.iml
+
+# this is here so your config doesn't over-ride the template
 config.php
 
 
