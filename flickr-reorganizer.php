@@ -171,17 +171,33 @@ foreach($photo_json_files as $photo_json_file) {
         exit();
     }
 
+    $photoId = $data['id'];
+    if (!isset($img_files[$photoId])) {
+        echo "no file: " . $photoId . "\n";
+        continue;
+    }
+    $originalPhoto = $img_files[$photoId];
+
     $albumDatas = $data['albums'];
 
     if (count($albumDatas) == 0) {
-        copyToPath($data, $no_album_path);
+        if ($configs['copy_files']) {
+            copyToPath($originalPhoto, $no_album_path);
+        } else {
+            moveToPath($originalPhoto, $no_album_path);
+        }
     } else {
         foreach($albumDatas as $albumData) {
 
             $albumId = $albumData['id'];
             $album = $albums[$albumId];
 
-            copyToPath($data, $album['path']);
+            if ($configs['copy_files']) {
+                copyToPath($originalPhoto, $album['path']);
+            } else {
+                //TODO: more than one album, need to move to one, then copy to the others
+                moveToPath($originalPhoto, $album['path']);
+            }
         }
     }
 
@@ -216,22 +232,40 @@ function getFileId($file, $extension) {
     return $fileId;
 }
 
-function copyToPath($photo, $path) {
-    if (!isset($photo['name'])) {
-        echo "no name: " . json_encode($photo) . "\n";
+function copyToPath($file, $newPath) {
+    if (!$file || !$newPath) {
+        echo "no file or detination path set\n";
         exit();
     }
 
-    echo "copying {$photo['name']} to $path \n";
+    $fileName = substr($file, strrpos($file, '/') +1);
+    $newFile = $newPath . DIRECTORY_SEPARATOR . $fileName;
+
+
+    if (!file_exists($newFile)) {
+        echo "copying $file to $newFile \n";
+        copy($file, $newFile);
+    }
 }
 
 function moveToPath($photo, $path) {
-    if (!isset($photo['name'])) {
-        echo "no name: " . json_encode($photo) . "\n";
+    if (!$file || !$newPath) {
+        echo "no file or detination path set\n";
         exit();
     }
 
-    echo "moving {$photo['name']} to $path \n";
+    $fileName = substr($file, strrpos($file, '/') +1);
+    $newFile = $newPath . DIRECTORY_SEPARATOR . $fileName;
+
+
+    if (!file_exists($newFile)) {
+        echo "moving $file to $newFile \n";
+
+        //
+        // TODO: uncomment here to move, I leave it commented  out so I don't accidently move files
+        //
+        //rename($file, $newFile);
+    }
 }
 
 
