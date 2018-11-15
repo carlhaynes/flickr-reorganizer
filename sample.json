@@ -1,0 +1,164 @@
+{
+  "id": "5653622232",
+  "name": "Easter 2011",
+  "description": "",
+  "count_views": "11",
+  "count_faves": "0",
+  "count_comments": "0",
+  "date_taken": "2011-04-24 14:57:38",
+  "count_tags": "3",
+  "count_notes": "0",
+  "date_imported": "2011-04-25 05:42:20",
+  "photopage": "https://www.flickr.com/photos/carlhaynes/5653622232/",
+  "original": "http://farm6.staticflickr.com/5222/5653622232_1e98450eda_o.jpg",
+  "license": "All Rights Reserved",
+  "exif": {
+    "JFIF:XResolution": {
+      "full": "JFIF:XResolution",
+      "label": "X-Resolution",
+      "value": "1",
+      "raw_value": "1"
+    },
+    "JFIF:YResolution": {
+      "full": "JFIF:YResolution",
+      "label": "Y-Resolution",
+      "value": "1",
+      "raw_value": "1"
+    },
+    "IFD0:Software": {
+      "full": "IFD0:Software",
+      "label": "Software",
+      "value": "Picasa",
+      "raw_value": "Picasa"
+    },
+    "ExifIFD:ExposureTime": {
+      "full": "ExifIFD:ExposureTime",
+      "label": "Exposure",
+      "value": "0.017 sec (1/60)",
+      "raw_value": "1/60"
+    },
+    "ExifIFD:FNumber": {
+      "full": "ExifIFD:FNumber",
+      "label": "Aperture",
+      "value": "f/5.6",
+      "raw_value": "5.6"
+    },
+    "ExifIFD:ISO": {
+      "full": "ExifIFD:ISO",
+      "label": "ISO Speed",
+      "value": "100",
+      "raw_value": "100"
+    },
+    "ExifIFD:DateTimeOriginal": {
+      "full": "ExifIFD:DateTimeOriginal",
+      "label": "Date and Time (Original)",
+      "value": "2011:04:24 14:57:38+00:00",
+      "raw_value": "2011:04:24 14:57:38+00:00"
+    },
+    "ExifIFD:FocalLength": {
+      "full": "ExifIFD:FocalLength",
+      "label": "Focal Length",
+      "value": "20 mm",
+      "raw_value": "20.0 mm"
+    },
+    "ExifIFD:ImageUniqueID": {
+      "full": "ExifIFD:ImageUniqueID",
+      "label": "Image Unique ID",
+      "value": "cc613932499afdcfd7a56740816ed323",
+      "raw_value": "cc613932499afdcfd7a56740816ed323"
+    },
+    "InteropIFD:RelatedImageWidth": {
+      "full": "InteropIFD:RelatedImageWidth",
+      "label": "Related Image Width",
+      "value": "3088",
+      "raw_value": "3088"
+    },
+    "InteropIFD:RelatedImageHeight": {
+      "full": "InteropIFD:RelatedImageHeight",
+      "label": "Related Image Height",
+      "value": "2056",
+      "raw_value": "2056"
+    },
+    "IFD1:Compression": {
+      "full": "IFD1:Compression",
+      "label": "Compression",
+      "value": "JPEG (old-style)",
+      "raw_value": "JPEG (old-style)"
+    },
+    "XMP-x:XMPToolkit": {
+      "full": "XMP-x:XMPToolkit",
+      "label": "XMPToolkit",
+      "value": "XMP Core 5.1.2",
+      "raw_value": "XMP Core 5.1.2"
+    },
+    "IPTC:EnvelopeRecordVersion": {
+      "full": "IPTC:EnvelopeRecordVersion",
+      "label": "Envelope Record Version",
+      "value": "4",
+      "raw_value": "4"
+    },
+    "IPTC:CodedCharacterSet": {
+      "full": "IPTC:CodedCharacterSet",
+      "label": "Coded Character Set",
+      "value": "UTF8",
+      "raw_value": "UTF8"
+    },
+    "IPTC:DateCreated": {
+      "full": "IPTC:DateCreated",
+      "label": "Date Created",
+      "value": "2011:04:24",
+      "raw_value": "2011:04:24"
+    },
+    "IPTC:TimeCreated": {
+      "full": "IPTC:TimeCreated",
+      "label": "Time Created",
+      "value": "14:57:38+00:00",
+      "raw_value": "14:57:38+00:00"
+    }
+  },
+  "groups": [
+
+  ],
+  "albums": [
+    {
+      "id": "72157626573895966",
+      "title": "04-24-11 - Easter 2011",
+      "url": "https://www.flickr.com/photos/carlhaynes/sets/72157626573895966/"
+    }
+  ],
+  "tags": [
+    {
+      "tag": "mayahaynes",
+      "user": "https://www.flickr.com/photos/carlhaynes/",
+      "date_create": "2011-04-25 05:42:20"
+    },
+    {
+      "tag": "quattrohaynes",
+      "user": "https://www.flickr.com/photos/carlhaynes/",
+      "date_create": "2011-04-25 05:42:20"
+    },
+    {
+      "tag": "carlhaynes",
+      "user": "https://www.flickr.com/photos/carlhaynes/",
+      "date_create": "2011-04-25 05:42:20"
+    }
+  ],
+  "people": [
+
+  ],
+  "notes": [
+
+  ],
+  "privacy": "public",
+  "comment_permissions": "any flickr member",
+  "tagging_permissions": "people you follow",
+  "safety": "safe",
+  "comments": [
+
+  ],
+  "geo": {
+    "latitude": "47931335",
+    "longitude": "-122166708",
+    "accuracy": "16"
+  }
+}

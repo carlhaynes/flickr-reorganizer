@@ -8,9 +8,16 @@
 $configs = include('config.php');
 echo json_encode($configs) . "\n";
 
-$json_files = [];
+$album_list = null;
+$no_album_path = null;
+
+$photo_json_files = [];
 $img_files = [];
 $avi_files = [];
+
+$albums = [];
+$missing_files = [];
+
 
 $from_dir = $configs['from_directory'];
 if (!file_exists($from_dir)) {
@@ -46,22 +53,58 @@ foreach($scanned_directory as $file) {
             if (is_dir($internal_file)) {
                 exit("nested directories !!!!!!");
             } else {
+
+                $fileId = null;
+
                 $path_parts = pathinfo($internal_file);
                 $extension = $path_parts['extension'];
                 if ($extension == 'jpg') {
                     $img_file = $from_dir . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $internal_file;;
-                    $img_files[] = $img_file;
+                    $fileId = getFileId($internal_file, "_o.$extension");
+                    if (isset($img_files[$fileId])) {
+                        exit("file already set: $img_file");
+                    }
+                    $img_files[$fileId] = $img_file;
+                   // echo " >> " . $img_file . " / $fileId" . "\n";
+                } else if ($extension == 'png') {
+                    $img_file = $from_dir . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $internal_file;
+                    $fileId = getFileId($internal_file, "_o.$extension");
+                    if (isset($img_files[$fileId])) {
+                        exit("file already set: $img_file");
+                    }
+
+                    $img_files[$fileId] = $img_file;
                     //echo " >> " . $img_file . "\n";
                 } else if ($extension == 'json') {
-                    $json_file = $from_dir . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $internal_file;;
-                    $json_files[] = $json_file;
+                    if ($internal_file == 'albums.json') {
+                        $json_file = $from_dir . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $internal_file;;
+                        $album_list = $json_file;
+                        continue;
+                    }
+
+                    if (strpos($internal_file, 'photo_') !== 0) {
+                        continue;
+                    }
+
+
+
+                    $json_file = $from_dir . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $internal_file;
+                    $photo_json_files[] = $json_file;
+
                     //echo " >> " . $json_file . "\n";
                 } else if ($extension == 'avi') {
                     $avi_file = $from_dir . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $internal_file;;
-                    $avi_files[] = $avi_file;
+                    $fileId = getFileId($internal_file, ".$extension");
+                    if (isset($avi_files[$fileId])) {
+                        echo("file already set: $avi_file ($fileId)\n");
+                        //exit("file already set: $avi_file");
+                    } else {
+                        echo("setting: $avi_file ($fileId)\n");
+                    }
+                    $avi_files[$fileId] = $avi_file;
                     //echo " >> " . $avi_file . "\n";
                 } else {
-                    exit("unknown file type: " . $extension);
+                    exit("unknown file type: " . $extension . " - $internal_file");
                 }
             }
         }
@@ -74,10 +117,138 @@ foreach($scanned_directory as $file) {
 
 }
 
-echo count($json_files) . " json files\n";
+echo count($photo_json_files) . " photo_json_files\n";
 echo count($img_files) . " image files\n";
 echo count($avi_files) . " video files\n";
 
 
+if (!$album_list) {
+    exit("Did not find album listing");
+}
+
+$json_string = file_get_contents($album_list);
+$data = json_decode($json_string, true);
+
+foreach($data['albums'] as $album) {
+
+    try {
+        $album['path'] = $to_dir . DIRECTORY_SEPARATOR . filename_safe($album['title']);
+        if (!file_exists($album['path'])) {
+            echo "making dir: {$album['path']}\n";
+            mkdir($album['path']);
+        } else {
+            echo "album dir exists: {$album['path']}\n";
+        }
+    } catch(Exception $e) {
+        exit($e);
+    }
+
+    $albums[$album['id']] = $album;
+
+    foreach($album['photos'] as $photoId) {
+        if (!isset($img_files[$photoId])) {
+            $missing_files[] = $missing_files;
+        }
+    }
+}
+
+// create the no album path
+$no_album_path = $to_dir . DIRECTORY_SEPARATOR . "no_album";
+if (!file_exists($no_album_path)) {
+    mkdir($no_album_path);
+}
 
 
+
+
+foreach($photo_json_files as $photo_json_file) {
+    $json_string = file_get_contents($photo_json_file);
+    $data = json_decode($json_string, true);
+
+    if (!isset($data['name'])) {
+        echo($photo_json_file . "\n");
+        echo "no name: " . json_encode($data) . "\n";
+        exit();
+    }
+
+    $albumDatas = $data['albums'];
+
+    if (count($albumDatas) == 0) {
+        copyToPath($data, $no_album_path);
+    } else {
+        foreach($albumDatas as $albumData) {
+
+            $albumId = $albumData['id'];
+            $album = $albums[$albumId];
+
+            copyToPath($data, $album['path']);
+        }
+    }
+
+}
+
+
+echo("There were " . count($albums) . " albums\n");
+
+echo("There were " . count($missing_files) . " missing photos from albums\n");
+
+exit("done");
+
+
+
+
+
+function getFileId($file, $extension) {
+    $fileId = $file;
+    $pos = strrpos( $fileId, $extension);
+    if ($pos !== false) {
+        $fileId = substr($fileId, 0, $pos);
+        $pos = strrpos( $fileId, '_');
+        if ($pos !== false) {
+            $fileId = substr($fileId, $pos+1);
+        } else {
+            $fileId = null;
+        }
+    } else {
+        $fileId = null;
+    }
+   // echo "$fileId\n";
+    return $fileId;
+}
+
+function copyToPath($photo, $path) {
+    if (!isset($photo['name'])) {
+        echo "no name: " . json_encode($photo) . "\n";
+        exit();
+    }
+
+    echo "copying {$photo['name']} to $path \n";
+}
+
+function moveToPath($photo, $path) {
+    if (!isset($photo['name'])) {
+        echo "no name: " . json_encode($photo) . "\n";
+        exit();
+    }
+
+    echo "moving {$photo['name']} to $path \n";
+}
+
+
+// stole this from the php docs
+function filename_safe($name) {
+    $except = array('\\',
+        '/',
+        ':',
+        '*',
+        '?',
+        '"',
+        '<',
+        '>',
+        '|',
+        ' ',
+        '\'',
+        ',',
+        '.');
+    return str_replace($except, '_', trim($name));
+}
