@@ -13,7 +13,6 @@ $no_album_path = null;
 
 $photo_json_files = [];
 $img_files = [];
-$avi_files = [];
 
 $albums = [];
 $missing_files = [];
@@ -95,13 +94,13 @@ foreach($scanned_directory as $file) {
                 } else if ($extension == 'avi') {
                     $avi_file = $from_dir . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $internal_file;;
                     $fileId = getFileId($internal_file, ".$extension");
-                    if (isset($avi_files[$fileId])) {
+                    if (isset($img_files[$fileId])) {
                         echo("file already set: $avi_file ($fileId)\n");
                         //exit("file already set: $avi_file");
                     } else {
                         echo("setting: $avi_file ($fileId)\n");
                     }
-                    $avi_files[$fileId] = $avi_file;
+                    $img_files[$fileId] = $avi_file;
                     //echo " >> " . $avi_file . "\n";
                 } else {
                     exit("unknown file type: " . $extension . " - $internal_file");
@@ -119,7 +118,6 @@ foreach($scanned_directory as $file) {
 
 echo count($photo_json_files) . " photo_json_files\n";
 echo count($img_files) . " image files\n";
-echo count($avi_files) . " video files\n";
 
 
 if (!$album_list) {
@@ -244,11 +242,13 @@ function copyToPath($file, $newPath) {
 
     if (!file_exists($newFile)) {
         echo "copying $file to $newFile \n";
-        copy($file, $newFile);
+        if (!copy($file, $newFile)) {
+            exit("error while copying file $file to $newFile");
+        }
     }
 }
 
-function moveToPath($photo, $path) {
+function moveToPath($file, $newPath) {
     if (!$file || !$newPath) {
         echo "no file or detination path set\n";
         exit();
@@ -263,6 +263,7 @@ function moveToPath($photo, $path) {
 
         //
         // TODO: uncomment here to move, I leave it commented  out so I don't accidently move files
+        // this has NOT been tested
         //
         //rename($file, $newFile);
     }
